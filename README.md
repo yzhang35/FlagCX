@@ -1,7 +1,7 @@
 
 [<img width="4750" height="958" alt="github+banner__2025-11-11+13_27_10" src="https://github.com/user-attachments/assets/31746439-e7b0-4391-8418-2f3597a88141" />](https://www.flagopen.ac.cn/)
 
-
+Test
 ## Latest News
 - **[2025/10]** Released [v0.6](https://github.com/FlagOpen/FlagCX/tree/release/v0.6):
   - Supported device-buffer P2P communication to achieve intra-node SendRecv operations.
