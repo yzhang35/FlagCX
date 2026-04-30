@@ -157,6 +157,14 @@ flagcxResult_t flagcxTransportP2pSetup(struct flagcxHeteroComm *comm,
             FLAGCXCHECK(bootstrapSend(comm->bootstrap, peer, 3000 + c,
                                       &connectInfo.desc,
                                       sizeof(flagcxShmIpcDesc_t)));
+          } else {
+            // Self-copy: initialize proxyInfo stream/events for deviceMemcpy
+            FLAGCXCHECK(
+                deviceAdaptor->streamCreate(&resources->proxyInfo.stream));
+            for (int s = 0; s < FLAGCX_P2P_MAX_STEPS; s++) {
+              FLAGCXCHECK(deviceAdaptor->eventCreate(
+                  &resources->proxyInfo.events[s], flagcxEventDisableTiming));
+            }
           }
         } else {
           INFO(FLAGCX_NET,
@@ -244,7 +252,7 @@ flagcxResult_t flagcxTransportP2pSetup(struct flagcxHeteroComm *comm,
                "NET Recv connect: rank %d <- peer %d channel %d (different "
                "node)",
                comm->rank, peer, c);
-          while (flagcxPollProxyResponse(comm, NULL, NULL, conn) ==
+          while (flagcxPollProxyResponse(comm, &conn->proxyConn, NULL, conn) ==
                  flagcxInProgress)
             ;
         }
@@ -287,7 +295,7 @@ flagcxResult_t flagcxTransportP2pSetup(struct flagcxHeteroComm *comm,
                "NET Send connect: rank %d -> peer %d channel %d (different "
                "node)",
                comm->rank, peer, c);
-          while (flagcxPollProxyResponse(comm, NULL, NULL, conn) ==
+          while (flagcxPollProxyResponse(comm, &conn->proxyConn, NULL, conn) ==
                  flagcxInProgress)
             ;
         }
